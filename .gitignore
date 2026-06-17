@@ -2,36 +2,52 @@
 .DS_Store
 
 # IDE
-.vscode/
 .idea/
+.vscode/
+*.iml
 
-# Environment and secrets
+# Java
+target/
+build/
+out/
+*.class
+*.jar
+*.war
+.gradle/
+hs_err_pid*
+*.hprof
+
+# Secrets and environment
 .env
 .env.*
+!.env.example
+secrets/
+credentials
 *.pem
 *.key
 *.p12
-credentials
-secrets/
+*.jks
+*.keystore
 
 # AWS
 .aws/
 .aws-sso/
-.aws-sam/
 
-# Terraform
+# Terraform / OpenTofu
 **/.terraform/*
 *.tfstate
 *.tfstate.*
-crash.log
 *.tfvars
 !*.tfvars.example
+crash.log
 
-# Python
-__pycache__/
-*.pyc
-.venv/
+# Kubernetes
+kubeconfig
+*.kubeconfig
+*-secret.yaml
+*-secrets.yaml
 
-# Logs and temporary files
+# Logs
 *.log
+logs/
 tmp/
