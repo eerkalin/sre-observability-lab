@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Environment and secrets
+.env
+.env.*
+*.pem
+*.key
+*.p12
+credentials
+secrets/
+
+# AWS
+.aws/
+.aws-sso/
+.aws-sam/
+
+# Terraform
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+!*.tfvars.example
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Logs and temporary files
+*.log
+tmp/
