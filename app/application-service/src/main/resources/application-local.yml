@@ -1,0 +1,9 @@
+app:
+  environment: local
+  default-customer-segment: LOCAL_TEST
+  default-slow-delay-ms: 1000
+
+logging:
+  level:
+    root: INFO
+    com.srelab.applicationservice: DEBUG

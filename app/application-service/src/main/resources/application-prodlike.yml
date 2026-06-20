@@ -1,0 +1,14 @@
+app:
+  environment: prodlike
+  default-customer-segment: STANDARD
+  default-slow-delay-ms: 3000
+
+management:
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    root: INFO
+    com.srelab.applicationservice: INFO

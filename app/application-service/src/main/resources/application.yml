@@ -3,7 +3,14 @@ spring:
     name: application-service
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
+
+app:
+  environment: ${APP_ENVIRONMENT:local}
+  owner: ${APP_OWNER:sre-lab}
+  default-customer-segment: ${APP_DEFAULT_CUSTOMER_SEGMENT:STANDARD}
+  slow-endpoint-enabled: ${APP_SLOW_ENDPOINT_ENABLED:true}
+  default-slow-delay-ms: ${APP_DEFAULT_SLOW_DELAY_MS:3000}
 
 management:
   endpoints:
@@ -13,9 +20,17 @@ management:
   endpoint:
     health:
       show-details: always
+    loggers:
+      enabled: true
 
 info:
   app:
-    name: application-service
-    owner: sre-lab
-    purpose: first local Spring Boot service
+    name: ${spring.application.name}
+    owner: ${app.owner}
+    environment: ${app.environment}
+    purpose: configurable Spring Boot service for SRE labs
+
+logging:
+  level:
+    root: INFO
+    com.srelab.applicationservice: INFO
