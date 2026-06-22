@@ -16,12 +16,16 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,loggers
+        include: health,info,metrics,loggers,prometheus
   endpoint:
     health:
       show-details: always
     loggers:
       enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+      environment: ${app.environment}
 
 info:
   app:

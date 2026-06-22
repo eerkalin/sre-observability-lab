@@ -4,6 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 
 import java.time.Instant;
 import java.util.Map;
@@ -16,10 +18,15 @@ public class ApplicationController {
     private static final Logger log = LoggerFactory.getLogger(ApplicationController.class);
 
     private final ApplicationSettings settings;
+    private final Counter applicationsCreatedCounter;
 
-    public ApplicationController(ApplicationSettings settings) {
-        this.settings = settings;
-    }
+    public ApplicationController(ApplicationSettings settings, MeterRegistry meterRegistry) {
+    this.settings = settings;
+    this.applicationsCreatedCounter = Counter.builder("business.applications.created")
+            .description("Total number of successfully created applications")
+            .tag("segment", settings.defaultCustomerSegment())
+            .register(meterRegistry);
+}
 
     @GetMapping("/config")
     public ResponseEntity<Map<String, Object>> config() {
@@ -51,6 +58,8 @@ public class ApplicationController {
     @PostMapping("/applications")
     public ResponseEntity<Map<String, Object>> createApplication() {
         String id = UUID.randomUUID().toString();
+        
+        applicationsCreatedCounter.increment();
 
         log.info("Created application id={} segment={}", id, settings.defaultCustomerSegment());
 
