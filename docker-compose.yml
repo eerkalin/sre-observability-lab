@@ -1,0 +1,28 @@
+services:
+  application-service:
+    image: application-service:local
+    env_file:
+      - ./compose.env
+    ports:
+      - "8080:8080"
+    
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    depends_on:
+      - application-service
+  
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_LOG_LEVEL=debug
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./observability/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./observability/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./observability/grafana/dashboards:/var/lib/grafana/dashboards:ro
