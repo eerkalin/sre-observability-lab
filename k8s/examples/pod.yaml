@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: application-service-pod
+  namespace: sre-lab
+  labels:
+    app: application-service
+    component: backend
+spec:
+  containers:
+    - name: application-service
+      image: application-service:local
+      imagePullPolicy: IfNotPresent
+      ports:
+        - name: http
+          containerPort: 8080
+      env:
+        - name: SPRING_PROFILES_ACTIVE
+          value: local
+        - name: APP_ENVIRONMENT
+          value: local-k8s
+        - name: APP_OWNER
+          value: sre-lab
+        - name: APP_DEFAULT_CUSTOMER_SEGMENT
+          value: LOCAL_TEST
+        - name: APP_SLOW_ENDPOINT_ENABLED
+          value: "true"
+        - name: APP_DEFAULT_SLOW_DELAY_MS
+          value: "1000"

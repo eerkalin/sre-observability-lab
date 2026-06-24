@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sre-lab
+  labels:
+    purpose: sre-observability-lab
+    environment: local-lab
+

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: application-service-config
+  namespace: sre-lab
+  labels:
+    app: application-service
+    component: backend
+data:
+  SPRING_PROFILES_ACTIVE: local
+  APP_ENVIRONMENT: local-k8s
+  APP_OWNER: sre-lab
+  APP_DEFAULT_CUSTOMER_SEGMENT: LOCAL_TEST
+  APP_SLOW_ENDPOINT_ENABLED: "true"
+  APP_DEFAULT_SLOW_DELAY_MS: "1000"
