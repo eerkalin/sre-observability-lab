@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  labels:
+    name: prometheus-config
+  namespace: monitoring
+data:
+  prometheus.yml: |-
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+    scrape_configs:
+      - job_name: 'prometheus'
+        static_configs:
+          - targets: ['localhost:9090']
+      - job_name: "application-service-service"
+        metrics_path: "/actuator/prometheus"
+        static_configs:
+          - targets:
+              - "application-service.sre-lab.svc.cluster.local:8080"
+      - job_name: "application-service-pods"
+        kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - sre-lab
+        relabel_configs:
+          - source_labels:
+              - __meta_kubernetes_pod_label_app
+            action: keep
+            regex: application-service
+            k
+          - source_labels:
+              - __meta_kubernetes_pod_ip
+              - __meta_kubernetes_pod_container_port_number
+            action: replace
+            regex: (.+);(.+)
+            replacement: $1:$2
+            target_label: __address__
+
+          - target_label: __metrics_path__
+            replacement: /actuator/prometheus
+
+          - source_labels:
+              - __meta_kubernetes_namespace
+            target_label: namespace
+
+          - source_labels:
+              - __meta_kubernetes_pod_name
+            target_label: pod
+
+          - source_labels:
+              - __meta_kubernetes_pod_label_app
+            target_label: app

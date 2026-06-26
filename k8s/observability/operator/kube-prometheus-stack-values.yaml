@@ -1,0 +1,44 @@
+grafana:
+  adminPassword: admin
+  defaultDashboardsTimezone: browser
+  resources:
+    requests:
+      cpu: 100m     # Минимально гарантировано: 0.1 ядра CPU
+      memory: 256Mi  # Минимально гарантировано: 256 Мегабайт ОЗУ
+    limits:
+      cpu: 500m      # Максимальный лимит: 0.5 ядра CPU
+      memory: 512Mi  # Максимальный лимит: 512 Мегабайт ОЗУ
+
+prometheus:
+  prometheusSpec:
+    retention: 6h
+    serviceMonitorSelectorNilUsesHelmValues: false
+    podMonitorSelectorNilUsesHelmValues: false
+    ruleSelectorNilUsesHelmValues: false
+    probeSelectorNilUsesHelmValues: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 400Mi
+      limits:
+        cpu: 500m
+        memory: 1Gi
+
+alertmanager:
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 100Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+prometheusOperator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 100Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
