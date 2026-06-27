@@ -1,0 +1,26 @@
+groups:
+- name: application-service.rules
+  rules:
+  - alert: ApplicationServiceTargetDown
+    expr: up{job="application-service-pods"} == 0
+    for: 1m
+    labels:
+      severity: critical
+      service: application-service
+      category: availability
+    annotations:
+      summary: Application service is down
+      description: The application-service pod {{ $labels.pod }} in namespace {{ $labels.namespace }} is down for more than 1 minute. Please check the service.
+      runbook: "runbooks/kubernetes-prometheus-observability-checklist.md"
+  
+  - alert: Application500Errors
+    expr: sum(rate(http_server_requests_seconds_count{job="application-service-pods", status=~"5.."}[5m]))/ sum(rate(http_server_requests_seconds_count{job="application-service-pods"}[5m])) > 0.05
+    for: 1m
+    labels:
+      severity: warning
+      service: application-service
+      category: errors
+    annotations:
+      summary: Application error rate is high
+      description: The application-service pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has a 5xx error rate greater than 5% over the last 5 minutes. Please investigate the cause of the errors.
+      runbook: "runbooks/kubernetes-prometheus-observability-checklist.md"

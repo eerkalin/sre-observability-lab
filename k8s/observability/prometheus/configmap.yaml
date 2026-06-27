@@ -10,6 +10,8 @@ data:
     global:
       scrape_interval: 15s
       evaluation_interval: 15s
+    rule_files:
+      - /etc/prometheus/application-service-alerts.yml
     scrape_configs:
       - job_name: 'prometheus'
         static_configs:
@@ -52,3 +54,34 @@ data:
           - source_labels:
               - __meta_kubernetes_pod_label_app
             target_label: app
+
+  application-service-alerts.yml: |
+
+    groups:
+
+      - name: application-service.rules
+
+        rules:
+
+          - alert: ApplicationServiceTargetDown
+            expr: up{job="application-service-pods"} == 0
+            for: 1m
+            labels:
+              severity: critical
+              service: application-service
+              category: availability
+            annotations:
+              summary: "application-service Prometheus target is down"
+              description: "Prometheus cannot scrape application-service pod {{ $labels.pod }} in namespace {{ $labels.namespace }} for more than 1 minute."
+              runbook: "runbooks/kubernetes-prometheus-observability-checklist.md"
+          - alert: Application500Errors
+            expr: sum(rate(http_server_requests_seconds_count{job="application-service-pods", status=~"5.."}[5m]))/ sum(rate(http_server_requests_seconds_count{job="application-service-pods"}[5m])) > 0.05
+            for: 1m
+            labels:
+              severity: warning
+              service: application-service
+              category: errors
+            annotations:
+              summary: Application error rate is high
+              description: The application-service pod {{ $labels.pod }} in namespace {{ $labels.namespace }} has a 5xx error rate greater than 5% over the last 5 minutes. Please investigate the cause of the errors.
+              runbook: "runbooks/kubernetes-prometheus-observability-checklist.md"
