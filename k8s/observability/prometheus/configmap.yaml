@@ -9,7 +9,11 @@ data:
   prometheus.yml: |-
     global:
       scrape_interval: 15s
-      evaluation_interval: 15s
+    alerting:
+      alertmanagers:
+        - static_configs:
+          - targets:
+            - alertmanager.monitoring.svc.cluster.local:9093
     rule_files:
       - /etc/prometheus/application-service-alerts.yml
     scrape_configs:
@@ -56,13 +60,9 @@ data:
             target_label: app
 
   application-service-alerts.yml: |
-
     groups:
-
       - name: application-service.rules
-
         rules:
-
           - alert: ApplicationServiceTargetDown
             expr: up{job="application-service-pods"} == 0
             for: 1m

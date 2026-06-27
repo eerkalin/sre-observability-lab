@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-config
+  namespace: monitoring
+  labels:
+    app: alertmanager
+    component: observability
+data:
+  alertmanager.yml: |
+    global:
+      resolve_timeout: 5m
+
+    route:
+      receiver: "default-receiver"
+      group_by:
+        - alertname
+        - service
+        - category
+      group_wait: 10s
+      group_interval: 1m
+      repeat_interval: 5m
+      routes:
+        - matchers:
+            - severity="critical"
+          receiver: "critical-receiver"
+        - matchers:
+            - category="business"
+          receiver: "business-receiver"
+        - matchers:
+            - severity="warning"
+          receiver: "warning-receiver"
+    inhibit_rules:
+      - source_matchers:
+          - alertname="ApplicationServiceTargetDown"
+          - severity="critical"
+        target_matchers:
+          - severity="warning"
+        equal:
+          - service
+
+    receivers:
+      - name: "default-receiver"
+      - name: "critical-receiver"
+      - name: "business-receiver"
+      - name: "warning-receiver"
