@@ -30,7 +30,6 @@ data:
               - __meta_kubernetes_pod_label_app
             action: keep
             regex: application-service
-            k
           - source_labels:
               - __meta_kubernetes_pod_ip
               - __meta_kubernetes_pod_container_port_number
