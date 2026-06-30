@@ -21,11 +21,14 @@ spec:
       labels:
         app: application-service
         component: backend
+      annotations:
+        release.version: "0.1.0-local"
+        release.description: "Production-like probes and rollout baseline"
     spec:
       terminationGracePeriodSeconds: 30
       containers:
         - name: application-service
-          image: application-service:local
+          image: application-service:0.1.0-local
           imagePullPolicy: IfNotPresent
           lifecycle:
             preStop:
