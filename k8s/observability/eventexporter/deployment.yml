@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: event-exporter 
+  namespace: monitoring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: event-exporter
+  template:
+    metadata:
+      labels:
+        app: event-exporter
+    spec:
+      serviceAccountName: event-exporter # Использует ваш созданный аккаунт
+      containers:
+      - name: event-exporter
+        image: opsverseio/kubernetes-event-exporter:v0.15 # <--- Новый живой образ
+        imagePullPolicy: IfNotPresent   
+        resources:
+          limits:
+            cpu: 300m
+            memory: 300Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        args:
+          - --conf=/etc/event-exporter/config.yaml
+        volumeMounts:
+          - name: cfg
+            mountPath: /etc/event-exporter
+      volumes:
+        - name: cfg
+          configMap:
+            name: event-exporter-config
