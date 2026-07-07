@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: app-localhost-cert
+  namespace: sre-lab
+spec:
+  secretName: app-localhost-certmanager-tls
+  duration: 24h
+  renewBefore: 12h
+  commonName: app.localhost
+  dnsNames:
+    - app.localhost
+  issuerRef:
+    name: selfsigned-cluster-issuer
+    kind: ClusterIssuer
+  

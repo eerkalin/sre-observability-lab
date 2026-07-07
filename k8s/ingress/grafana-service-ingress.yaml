@@ -10,7 +10,7 @@ spec:
   tls:
     - hosts:
         - grafana.localhost
-      secretName: grafana-localhost-tls
+      secretName: grafana-localhost-certmanager-tls
   rules:
     - host: grafana.localhost
       http:
