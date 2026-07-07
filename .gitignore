@@ -51,3 +51,9 @@ kubeconfig
 *.log
 logs/
 tmp/
+
+
+# TLS cert
+tls/*.key
+tls/*.crt
+tls/secret.yaml

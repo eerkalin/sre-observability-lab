@@ -5,6 +5,10 @@ metadata:
   namespace: sre-lab
 spec:
   ingressClassName: nginx
+  tls:
+    - hosts:
+        - app.localhost
+      secretName: app-localhost-tls
   rules:
     - host: app.localhost
       http:
