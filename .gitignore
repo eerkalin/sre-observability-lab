@@ -56,4 +56,4 @@ tmp/
 # TLS cert
 tls/*.key
 tls/*.crt
-tls/secret.yaml
+tls/*.yaml
