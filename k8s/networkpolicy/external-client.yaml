@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-demo
+  labels:
+    access: external
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: external-client
+  namespace: external-demo
+  labels:
+    app: external-client
+    role: external
+spec:
+  containers:
+    - name: curl
+      image: curlimages/curl:8.6.0
+      command: ["sleep", "36000"]
