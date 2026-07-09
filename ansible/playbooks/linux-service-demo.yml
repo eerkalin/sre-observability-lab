@@ -1,0 +1,81 @@
+---
+- name: Linux service automation demo
+  hosts: local
+  gather_facts: true
+
+  vars:
+    service_name: demo-service
+    service_port: 8080
+    log_level: INFO
+    environment_name: stage
+    service_base_dir: /tmp/ansible-service-demo
+    service_config_dir: /tmp/ansible-service-demo/config
+    service_log_dir: /tmp/ansible-service-demo/logs
+    service_runtime_dir: /tmp/ansible-service-demo/runtime
+
+  tasks:
+    - name: Ensure service base directory exists
+      ansible.builtin.file:
+        path: "{{ service_base_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Ensure service config directory exists
+      ansible.builtin.file:
+        path: "{{ service_config_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Ensure service log directory exists
+      ansible.builtin.file:
+        path: "{{ service_log_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Ensure service runtime directory exists
+      ansible.builtin.file:
+        path: "{{ service_runtime_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Copy welcome file
+      ansible.builtin.copy:
+        src: ../files/welcome.txt
+        dest: "{{ service_base_dir }}/welcome.txt"
+        mode: "0644"
+
+    - name: Render service config from template
+      ansible.builtin.template:
+        src: ../templates/demo-service.conf.j2
+        dest: "{{ service_config_dir }}/demo-service.conf"
+        mode: "0644"
+      notify: Restart demo service
+
+    - name: Ensure service state file exists
+      ansible.builtin.copy:
+        dest: "{{ service_runtime_dir }}/service.status"
+        content: |
+          service={{ service_name }}
+          state=running
+        mode: "0644"
+        force: false
+
+    - name: Show rendered config
+      ansible.builtin.command:
+        cmd: cat "{{ service_config_dir }}/demo-service.conf"
+      register: rendered_config
+      changed_when: false
+
+    - name: Print rendered config
+      ansible.builtin.debug:
+        var: rendered_config.stdout_lines
+
+  handlers:
+    - name: Restart demo service
+      ansible.builtin.copy:
+        dest: "{{ service_runtime_dir }}/last_restart.txt"
+        content: |
+          service={{ service_name }}
+          restarted_at={{ ansible_date_time.iso8601 }}
+          reason=config_changed
+        mode: "0644"
