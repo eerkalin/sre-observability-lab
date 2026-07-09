@@ -33,8 +33,9 @@
   ansible.builtin.template:
     src: demo-service.conf.j2
     dest: "{{ demo_service_config_dir }}/demo-service.conf"
-    mode: "0644"
+    mode: "0600"
   notify: Restart demo service
+  no_log: true
 
 - name: Ensure service state file exists
   ansible.builtin.copy:
@@ -45,12 +46,23 @@
     mode: "0644"
     force: false
 
-- name: Show rendered service config
-  ansible.builtin.command:
-    cmd: cat "{{ demo_service_config_dir }}/demo-service.conf"
-  register: demo_service_rendered_config
-  changed_when: false
+#- name: Show rendered service config
+#  ansible.builtin.command:
+#    cmd: cat "{{ demo_service_config_dir }}/demo-service.conf"
+#  register: demo_service_rendered_config
+#  changed_when: false
+#- name: Print rendered service config
+#  ansible.builtin.debug:
+#    var: demo_service_rendered_config.stdout_lines
 
-- name: Print rendered service config
+- name: Check rendered service config exists
+  ansible.builtin.stat:
+    path: "{{ demo_service_config_dir }}/demo-service.conf"
+  register: demo_service_config_stat
+
+- name: Print rendered service config metadata
   ansible.builtin.debug:
-    var: demo_service_rendered_config.stdout_lines
+    msg:
+      - "Config exists: {{ demo_service_config_stat.stat.exists }}"
+      - "Config mode: {{ demo_service_config_stat.stat.mode }}"
+      - "Config size: {{ demo_service_config_stat.stat.size }}"
