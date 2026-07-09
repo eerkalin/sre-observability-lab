@@ -1,0 +1,20 @@
+- name: This is test playbook for local basics
+  hosts: local
+  gather_facts: true
+  
+  tasks:
+    - name: Create a directory
+      ansible.builtin.file:
+        path: /tmp/ansible-test
+        state: directory
+        mode: '0755'
+    - name: Create a file
+      ansible.builtin.copy:
+        dest: /tmp/ansible-test/hello.txt
+        mode: '0644'
+        force: no
+        content: |
+          This is a test file created by Ansible.
+          Hi friend!
+    - name: Get hostname and add to the file
+      ansible.builtin.shell: "hostname >> /tmp/ansible-test/hello.txt"
