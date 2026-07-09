@@ -1,0 +1,56 @@
+---
+- name: Ensure service base directory exists
+  ansible.builtin.file:
+    path: "{{ demo_service_base_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Ensure service config directory exists
+  ansible.builtin.file:
+    path: "{{ demo_service_config_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Ensure service log directory exists
+  ansible.builtin.file:
+    path: "{{ demo_service_log_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Ensure service runtime directory exists
+  ansible.builtin.file:
+    path: "{{ demo_service_runtime_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy welcome file
+  ansible.builtin.copy:
+    src: welcome.txt
+    dest: "{{ demo_service_base_dir }}/welcome.txt"
+    mode: "0644"
+
+- name: Render service config from role template
+  ansible.builtin.template:
+    src: demo-service.conf.j2
+    dest: "{{ demo_service_config_dir }}/demo-service.conf"
+    mode: "0644"
+  notify: Restart demo service
+
+- name: Ensure service state file exists
+  ansible.builtin.copy:
+    dest: "{{ demo_service_runtime_dir }}/service.status"
+    content: |
+      service={{ demo_service_name }}
+      state=running
+    mode: "0644"
+    force: false
+
+- name: Show rendered service config
+  ansible.builtin.command:
+    cmd: cat "{{ demo_service_config_dir }}/demo-service.conf"
+  register: demo_service_rendered_config
+  changed_when: false
+
+- name: Print rendered service config
+  ansible.builtin.debug:
+    var: demo_service_rendered_config.stdout_lines

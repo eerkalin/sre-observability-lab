@@ -1,0 +1,3 @@
+demo_service_port: 8090
+demo_service_log_level: DEBUG
+demo_service_environment: stage

@@ -1,0 +1,10 @@
+---
+- name: Restart demo service
+  ansible.builtin.copy:
+    dest: "{{ demo_service_runtime_dir }}/last_restart.txt"
+    content: |
+      service={{ demo_service_name }}
+      restarted_at={{ ansible_date_time.iso8601 }}
+      reason=config_changed
+      managed_by=demo_service_role
+    mode: "0644"

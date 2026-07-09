@@ -1,0 +1,6 @@
+- name: Configure demo service through Ansible role
+  hosts: local
+  gather_facts: true
+  roles:
+    - role: demo_service
+

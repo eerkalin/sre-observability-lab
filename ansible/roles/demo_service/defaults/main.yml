@@ -1,0 +1,9 @@
+---
+demo_service_name: demo-service
+demo_service_port: 8080
+demo_service_log_level: INFO
+demo_service_environment: local
+demo_service_base_dir: /tmp/ansible-role-demo
+demo_service_config_dir: /tmp/ansible-role-demo/config
+demo_service_log_dir: /tmp/ansible-role-demo/logs
+demo_service_runtime_dir: /tmp/ansible-role-demo/runtime
