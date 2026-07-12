@@ -1,0 +1,42 @@
+replicaCount: 2
+
+image:
+  repository: application-service
+  tag: "0.1.0-local"
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: http
+
+container:
+  port: 8080
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+config:
+  appMode: "helm-local"
+  logLevel: "INFO"
+
+ingress:
+  enabled: true
+  className: nginx
+  host: app.localhost
+  path: /
+  pathType: Prefix
+  tls:
+    enabled: true
+    secretName: app-localhost-certmanager-tls
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    cert-manager.io/cluster-issuer: selfsigned-cluster-issuer

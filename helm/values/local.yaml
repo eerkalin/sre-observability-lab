@@ -1,0 +1,10 @@
+replicaCount: 2
+
+config:
+  appMode: "helm-local-values-file"
+  logLevel: "INFO"
+
+ingress:
+  host: helm-app.localhost
+  tls:
+    secretName: app-localhost-certmanager-tls
