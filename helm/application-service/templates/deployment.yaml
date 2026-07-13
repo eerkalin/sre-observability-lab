@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: application-service
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          image: "{{ required "image.repository is required" .Values.image.repository }}:{{ required "image.tag is required" .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
@@ -39,6 +39,10 @@ spec:
                 configMapKeyRef:
                   name: {{ include "application-service.fullname" . }}
                   key: LOG_LEVEL
+            {{- range .Values.extraEnv }}
+            - name: {{ .name | quote }}
+              value: {{ .value | quote }}
+            {{- end }}
           startupProbe:
             httpGet:
               path: /actuator/health

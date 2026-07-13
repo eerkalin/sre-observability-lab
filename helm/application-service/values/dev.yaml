@@ -1,0 +1,39 @@
+replicaCount: 1
+
+image:
+  tag: "0.1.0-local"
+
+config:
+  appMode: "dev"
+  logLevel: "DEBUG"
+
+resources:
+  requests:
+    cpu: "50m"
+    memory: "128Mi"
+  limits:
+    cpu: "300m"
+    memory: "384Mi"
+
+ingress:
+  host: dev-app.localhost
+  tls:
+    secretName: app-localhost-dev-certmanager-tls
+networkPolicy:
+  enabled: false
+  ingress:
+    enabled: true
+  egress:
+    enabled: false
+
+extraEnv:
+  - name: FEATURE_X_ENABLED
+    value: "true"
+  - name: BUSINESS_REGION
+    value: "KZ"
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  path: /actuator/prometheus
+  labels: {}

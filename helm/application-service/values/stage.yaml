@@ -1,0 +1,40 @@
+replicaCount: 2
+
+image:
+  tag: "0.1.0-local"
+
+config:
+  appMode: "stage"
+  logLevel: "INFO"
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "500m"
+    memory: "512Mi"
+
+ingress:
+  host: stage-app.localhost
+  tls:
+    secretName: app-localhost-stage-certmanager-tls
+
+networkPolicy:
+  enabled: false
+  ingress:
+    enabled: true
+  egress:
+    enabled: false
+
+extraEnv:
+  - name: FEATURE_X_ENABLED
+    value: "true"
+  - name: BUSINESS_REGION
+    value: "KZ"
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  path: /actuator/prometheus
+  labels: {}

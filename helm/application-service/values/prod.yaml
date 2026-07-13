@@ -1,0 +1,40 @@
+replicaCount: 3
+
+image:
+  tag: "0.1.0-local"
+
+config:
+  appMode: "prod"
+  logLevel: "WARN"
+
+resources:
+  requests:
+    cpu: "300m"
+    memory: "512Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1024Mi"
+
+ingress:
+  host: prod-app.localhost
+  tls:
+    secretName: app-localhost-prod-certmanager-tls
+
+networkPolicy:
+  enabled: false
+  ingress:
+    enabled: true
+  egress:
+    enabled: false
+
+extraEnv:
+  - name: FEATURE_X_ENABLED
+    value: "true"
+  - name: BUSINESS_REGION
+    value: "KZ"
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  path: /actuator/prometheus
+  labels: {}
