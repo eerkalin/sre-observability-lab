@@ -22,7 +22,7 @@ ingress:
 networkPolicy:
   enabled: false
   ingress:
-    enabled: true
+    enabled: false
   egress:
     enabled: false
 

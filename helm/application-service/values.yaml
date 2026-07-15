@@ -40,3 +40,22 @@ ingress:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     cert-manager.io/cluster-issuer: selfsigned-cluster-issuer
+
+extraEnv:
+  - name: FEATURE_X_ENABLED
+    value: "true"
+  - name: BUSINESS_REGION
+    value: "KZ"
+
+networkPolicy:
+  enabled: false
+  ingress:
+    enabled: false
+  egress:
+    enabled: false
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  path: /actuator/prometheus
+  labels: {}
